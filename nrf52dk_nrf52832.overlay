@@ -1,24 +1,56 @@
 // To get started, press Ctrl+Space to bring up the completion menu and view the available nodes.
 
-// You can also use the buttons in the sidebar to perform actions on nodes.
-// Actions currently available include:
+&led0 {
+	gpios = <&gpio0 17 GPIO_ACTIVE_LOW>;
+};
 
-// * Enabling / disabling the node
-// * Adding the bus to a bus
-// * Removing the node
-// * Connecting ADC channels
+&led1 {
+	gpios = <&gpio0 19 GPIO_ACTIVE_LOW>;
+};
 
-// For more help, browse the DeviceTree documentation at https://docs.zephyrproject.org/latest/guides/dts/index.html
-// You can also visit the nRF DeviceTree extension documentation at https://nrfconnect.github.io/vscode-nrf-connect/devicetree/nrfdevicetree.html
+&led2 {
+	status = "disabled";
+	/delete-property/ gpios;
+};
 
-&spi0 {
-	status = "okay";
-	max7219_7seg: max7219@0 {
-		compatible = "maxim,max7219";
-		reg = < 0x00 >;
-		spi-max-frequency = < 4000000 >;
-		num-cascading = < 1 >;
-		intensity = < 0 >;
-		scan-limit = < 7 >;
+&led3 {
+	status = "disabled";
+	/delete-property/ gpios;
+};
+
+&button0 {
+	gpios = <&gpio0 11 (GPIO_PULL_UP | GPIO_ACTIVE_LOW)>;
+};
+
+&button1 {
+	gpios = <&gpio0 15 (GPIO_PULL_UP | GPIO_ACTIVE_LOW)>;
+};
+
+&button2 {
+	status = "disabled";
+	/delete-property/ gpios;
+};
+
+&button3 {
+	status = "disabled";
+	/delete-property/ gpios;
+};
+
+&pwm0 {
+	status = "disabled";
+};
+
+&spi0_default {
+	group1 {
+		psels = <NRF_PSEL(SPIM_MOSI, 0, 23)>,
+			<NRF_PSEL(SPIM_MISO, 0, 24)>,
+			<NRF_PSEL(SPIM_SCK, 0, 25)>;
+	};
+};
+
+&i2c0_default {
+	group1 {
+		psels = <NRF_PSEL(TWIM_SDA, 0, 26)>,
+			<NRF_PSEL(TWIM_SCL, 0, 27)>;
 	};
 };
