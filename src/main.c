@@ -2,22 +2,35 @@
 #include <zephyr/drivers/gpio.h>
 #include <zephyr/drivers/spi.h>
 
+#include "max7219.h"
+
 #define LED0_NODE				DT_ALIAS(led0)
 #define SPI0_NODE				DT_NODELABEL(my_spi0)
 
-static const struct gpio_dt_spec led0 = GPIO_DT_SPEC_GET_OR(LED0_NODE, gpios, {0});
+static const struct gpio_dt_spec led0 = GPIO_DT_SPEC_GET(LED0_NODE, gpios);
 
 static int led1_value = GPIO_ACTIVE_LOW;
+
+static struct spi_config spi_config = {
+	.operation = SPI_WORD_SET(8),
+	// 100kHz
+	.frequency = 1000000
+};
+
+static struct max7219_config max7219_config = {
+	.spi_config = &spi_config,
+	.num_cascading = MAX7219_NUM_CASCADING
+};
+
+static uint8_t max7219_tx_buf[MAX7219_NUM_CASCADING * 2];
+
+static struct max7219_data max7219_data = {
+	.tx_buf = max7219_tx_buf
+};
 
 void main(void)
 {
 	printk("Hello World! %s\n", CONFIG_BOARD);
-
-	const struct device* device_spi0 = DEVICE_DT_GET(SPI0_NODE);
-	struct spi_config spi_config = {0};
-	spi_config.operation = SPI_WORD_SET(16);
-	// 100kHz
-	spi_config.frequency = 1000000;
 
 	if (!device_is_ready(led0.port))
 	{
@@ -32,28 +45,13 @@ void main(void)
 		return;
 	}
 
-	if (!device_is_ready(device_spi0))
-	{
-		printk("spi0 is not ready");
-	}
+	// MAX7219
+	// device 取得
+	max7219_config.device_spi = DEVICE_DT_GET(SPI0_NODE);
 
-	/*
-	uint8_t address[1];
-	uint8_t data[1];
-	struct spi_buf bufs[] = {
-		{
-			.buf = address
-		},
-		{
-			.buf = data,
-			.len = sizeof(data)
-		}
-	};
-	struct spi_buf_set tx_buf = {
-		.buffers = bufs
-	};
-	ret = spi_write(device_spi0, &spi_config, &tx_buf);
-	*/
+	max7219_init(&max7219_config);
+	// Display Test
+	max7219_write(&max7219_config, &max7219_data, MAX7219_REGISTER_DISPLAY_TEST, MAX7219_DISPLAY_TEST_ON);
 
 	while (1)
 	{
