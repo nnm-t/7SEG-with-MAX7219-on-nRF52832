@@ -25,6 +25,14 @@
 #define MAX7219_DECODE_CODE_B_0_TO_3		0x0F
 #define MAX7219_DECODE_CODE_B_0_TO_7		0xFF
 
+#define MAX7219_CODE_B_HYPHEN				0x0A
+#define MAX7219_CODE_B_E					0x0B
+#define MAX7219_CODE_B_H					0x0C
+#define MAX7219_CODE_B_L					0x0D
+#define MAX7219_CODE_B_P					0x0E
+#define MAX7219_CODE_B_BLANK				0x0F
+#define MAX7219_CODE_B_COMMA				0x80
+
 #define MAX7219_INTENSITY_1_PER_32			0x00
 #define MAX7219_INTENSITY_3_PER_32			0x01
 #define MAX7219_INTENSITY_5_PER_32			0x02
@@ -70,3 +78,23 @@ struct max7219_data {
 int max7219_init(struct max7219_config* config);
 
 int max7219_write(struct max7219_config* config, struct max7219_data* data, const uint8_t address, const uint8_t value);
+
+int max7219_decode_mode_no(struct max7219_config* config, struct max7219_data* data);
+
+int max7219_decode_mode_b_0(struct max7219_config* config, struct max7219_data* data);
+
+int max7219_decode_mode_b_0_to_3(struct max7219_config* config, struct max7219_data* data);
+
+int max7219_decode_mode_b_0_to_7(struct max7219_config* config, struct max7219_data* data);
+
+int max7219_set_intensity(struct max7219_config* config, struct max7219_data* data, const uint8_t value);
+
+int max7219_set_scan_limit(struct max7219_config* config, struct max7219_data* data, const uint8_t value);
+
+int max7219_shutdown_execute(struct max7219_config* config, struct max7219_data* data);
+
+int max7219_shutdown_cancel(struct max7219_config* config, struct max7219_data* data);
+
+int max7219_display_test_on(struct max7219_config* config, struct max7219_data* data);
+
+int max7219_display_test_off(struct max7219_config* config, struct max7219_data* data);

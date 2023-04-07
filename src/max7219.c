@@ -30,3 +30,53 @@ int max7219_write(struct max7219_config* config, struct max7219_data* data, cons
 
 	return spi_write(config->device_spi, config->spi_config, &tx_buf_set);
 }
+
+int max7219_decode_mode_no(struct max7219_config* config, struct max7219_data* data)
+{
+	return max7219_write(config, data, MAX7219_REGISTER_DECODE_MODE, MAX7219_DECODE_NO);
+}
+
+int max7219_decode_mode_b_0(struct max7219_config* config, struct max7219_data* data)
+{
+	return max7219_write(config, data, MAX7219_REGISTER_DECODE_MODE, MAX7219_DECODE_CODE_B_0);
+}
+
+int max7219_decode_mode_b_0_to_3(struct max7219_config* config, struct max7219_data* data)
+{
+	return max7219_write(config, data, MAX7219_REGISTER_DECODE_MODE, MAX7219_DECODE_CODE_B_0_TO_3);
+}
+
+int max7219_decode_mode_b_0_to_7(struct max7219_config* config, struct max7219_data* data)
+{
+	return max7219_write(config, data, MAX7219_REGISTER_DECODE_MODE, MAX7219_DECODE_CODE_B_0_TO_7);
+}
+
+int max7219_set_intensity(struct max7219_config* config, struct max7219_data* data, const uint8_t value)
+{
+	return max7219_write(config, data, MAX7219_REGISTER_INTENSITY, value);
+}
+
+int max7219_set_scan_limit(struct max7219_config* config, struct max7219_data* data, const uint8_t value)
+{
+	return max7219_write(config, data, MAX7219_REGISTER_SCAN_LIMIT, value);
+}
+
+int max7219_shutdown_execute(struct max7219_config* config, struct max7219_data* data)
+{
+	return max7219_write(config, data, MAX7219_REGISTER_SHUTDOWN, MAX7219_SHUTDOWN_EXECUTE);
+}
+
+int max7219_shutdown_cancel(struct max7219_config* config, struct max7219_data* data)
+{
+	return max7219_write(config, data, MAX7219_REGISTER_SHUTDOWN, MAX7219_SHUTDOWN_CANCEL);
+}
+
+int max7219_display_test_on(struct max7219_config* config, struct max7219_data* data)
+{
+	return max7219_write(config, data, MAX7219_REGISTER_DISPLAY_TEST, MAX7219_DISPLAY_TEST_ON);
+}
+
+int max7219_display_test_off(struct max7219_config* config, struct max7219_data* data)
+{
+	return max7219_write(config, data, MAX7219_REGISTER_DISPLAY_TEST, MAX7219_DISPLAY_TEST_OFF);
+}
