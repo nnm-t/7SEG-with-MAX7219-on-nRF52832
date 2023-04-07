@@ -6,8 +6,10 @@
 
 #define LED0_NODE				DT_ALIAS(led0)
 #define SPI0_NODE				DT_NODELABEL(my_spi0)
+#define SPI0_SS_NODE			DT_ALIAS(myspi0ss)
 
 static const struct gpio_dt_spec led0 = GPIO_DT_SPEC_GET(LED0_NODE, gpios);
+static const struct gpio_dt_spec spi0_ss = GPIO_DT_SPEC_GET(SPI0_SS_NODE, gpios);
 
 static int led1_value = GPIO_ACTIVE_LOW;
 
@@ -45,13 +47,46 @@ void main(void)
 		return;
 	}
 
+	if (!device_is_ready(spi0_ss.port))
+	{
+		printk("spi0_ss is not ready");
+	}
+
+	ret = gpio_pin_configure_dt(&spi0_ss, GPIO_OUTPUT_INACTIVE);
+	if (ret < 0)
+	{
+		printk("gpio_pin_configure_dt() return code: %d", ret);
+		return;
+	}
+
 	// MAX7219
 	// device 取得
 	max7219_config.device_spi = DEVICE_DT_GET(SPI0_NODE);
 
-	max7219_init(&max7219_config);
+	ret = max7219_init(&max7219_config);
+	if (ret < 0)
+	{
+		printk("MAX7219 init error: %d", ret);
+		return;
+	}
+
+	k_msleep(100);
+
 	// Display Test
-	max7219_write(&max7219_config, &max7219_data, MAX7219_REGISTER_DISPLAY_TEST, MAX7219_DISPLAY_TEST_ON);
+	ret = max7219_display_test_on(&max7219_config, &max7219_data);
+	if (ret < 0)
+	{
+		printk("MAX7219 display test error: %d", ret);
+		return;
+	}
+
+	k_msleep(100);
+	ret = gpio_pin_set_dt(&spi0_ss, GPIO_ACTIVE_HIGH);
+	if (ret < 0)
+	{
+		printk("gpio_pin_set_dt() return code: %d", ret);
+		return;
+	}
 
 	while (1)
 	{

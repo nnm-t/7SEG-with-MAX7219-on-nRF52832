@@ -59,3 +59,17 @@
 my_spi0: &spi0 {
 	status = "okay";
 };
+
+/ {
+	my_gpio0 {
+		compatible = "gpio-keys";
+		spi0ss: spi0_ss {
+			gpios = <&gpio0 22 GPIO_ACTIVE_LOW>;
+			label = "SPI0 SS";
+		};
+	};
+
+	aliases {
+		myspi0ss = &spi0ss;
+	};
+};
