@@ -2,20 +2,22 @@
 
 &led0 {
 	gpios = <&gpio0 17 GPIO_ACTIVE_LOW>;
+	label = "Blue LED 1";
 };
 
 &led1 {
 	gpios = <&gpio0 19 GPIO_ACTIVE_LOW>;
+	label = "Blue LED 2";
 };
 
 &led2 {
-	status = "disabled";
-	/delete-property/ gpios;
+	gpios = <&gpio0 2 GPIO_ACTIVE_HIGH>;
+	label = "Red LED";
 };
 
 &led3 {
-	status = "disabled";
-	/delete-property/ gpios;
+	gpios = <&gpio0 3 GPIO_ACTIVE_HIGH>;
+	label = "Green LED";
 };
 
 &button0 {
