@@ -8,6 +8,19 @@ int max7219_init(struct max7219_config* config)
 		return -ENODEV;
 	}
 
+	if (!device_is_ready(config->gpio_load->port))
+	{
+		printk("LOAD pin is not ready");
+		return -ENODEV;
+	}
+
+	int ret = gpio_pin_configure_dt(config->gpio_load, GPIO_OUTPUT_INACTIVE);
+	if (ret < 0)
+	{
+		printk("LOAD pin gpio_pin_configure_dt() return code: %d", ret);
+		return ret;
+	}
+
 	return 0;
 }
 
@@ -28,7 +41,25 @@ int max7219_write(struct max7219_config* config, struct max7219_data* data, cons
 		data->tx_buf[i * 2 + 1] = value;
 	}
 
-	return spi_write(config->device_spi, config->spi_config, &tx_buf_set);
+	k_msleep(10);
+
+	int ret = gpio_pin_set_dt(config->gpio_load, GPIO_ACTIVE_LOW);
+	if (ret < 0)
+	{
+		return ret;
+	}
+
+	k_msleep(10);
+
+	ret = spi_write(config->device_spi, config->spi_config, &tx_buf_set);
+	if (ret < 0)
+	{
+		return ret;
+	}
+
+	k_msleep(10);
+
+	return gpio_pin_set_dt(config->gpio_load, GPIO_ACTIVE_HIGH);
 }
 
 int max7219_decode_mode_no(struct max7219_config* config, struct max7219_data* data)

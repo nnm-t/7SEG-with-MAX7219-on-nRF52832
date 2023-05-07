@@ -67,6 +67,7 @@
 
 struct max7219_config {
 	const struct device* device_spi;
+	const struct gpio_dt_spec* gpio_load;
 	struct spi_config* spi_config;
 	uint32_t num_cascading;
 };
