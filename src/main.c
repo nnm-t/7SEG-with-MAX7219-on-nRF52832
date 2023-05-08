@@ -251,8 +251,6 @@ void main(void)
 		return;
 	}
 
-	// Bluetooth LED
-
 	// Red LED
 	if (!device_is_ready(led2.port))
 	{
