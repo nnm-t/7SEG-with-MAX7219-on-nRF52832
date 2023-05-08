@@ -41,23 +41,17 @@ int max7219_write(struct max7219_config* config, struct max7219_data* data, cons
 		data->tx_buf[i * 2 + 1] = value;
 	}
 
-	k_msleep(10);
-
 	int ret = gpio_pin_set_dt(config->gpio_load, GPIO_ACTIVE_LOW);
 	if (ret < 0)
 	{
 		return ret;
 	}
 
-	k_msleep(10);
-
 	ret = spi_write(config->device_spi, config->spi_config, &tx_buf_set);
 	if (ret < 0)
 	{
 		return ret;
 	}
-
-	k_msleep(10);
 
 	return gpio_pin_set_dt(config->gpio_load, GPIO_ACTIVE_HIGH);
 }
